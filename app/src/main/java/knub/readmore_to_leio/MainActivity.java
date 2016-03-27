@@ -1,19 +1,14 @@
 package knub.readmore_to_leio;
 
 import android.Manifest;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import java.io.File;
+import knub.readmore_to_leio.databases.LeioDatabase;
+import knub.readmore_to_leio.databases.ReadMoreDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,9 +26,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void convertDatabase(View v) {
-        ReadMoreDatabase database = new ReadMoreDatabase(APPLICATION_FILE_PATH + "/20160327T123540-ReadMore.sqlite3");
-        database.getAllBooks();
-        Toast toast = Toast.makeText(getApplicationContext(), "Database created", Toast.LENGTH_SHORT);
+        ReadMoreDatabase readmoreDb = new ReadMoreDatabase(APPLICATION_FILE_PATH + "/20160327T123540-ReadMore.sqlite3");
+        LeioDatabase leioDb = new LeioDatabase(getApplicationContext());
+        ReadMoreToLeioConverter converter = new ReadMoreToLeioConverter(readmoreDb, leioDb);
+        converter.convertDatabases();
+
+        Toast toast = Toast.makeText(getApplicationContext(), "Leio contains " + leioDb.getNumberOfBooks(), Toast.LENGTH_SHORT);
         toast.show();
     }
 

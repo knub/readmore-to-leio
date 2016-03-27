@@ -1,4 +1,7 @@
 The key variable in the Book and ReadingSession classes is a unique identifier. I use the first character of the title, the first character of the author, an underscore and a timestamp ("MMddyyHHmmss"), so the result is something like AB_031316162345, but anything will do as long as it's unique. For a ReadingSession's key I use the book key plus the letter S and another timestamp, so the result looks like AB_031316162345S031316162345, but, again, anything will do as long as it's unique.
+
 Other than that I think you can ignore pretty much anything that doesn't look obvious. The scheduled/scheduling Book variables are for when the user sets a deadline, which isn't available in ReadMore, so you can just leave them at their default values. The same goes for the ebook, readingUnit and outOfOrder variables.
+
 I think ReadMore saves sessions with the date the session was started on; I do it with the date the session was finished on. You can take that into account, but it won't make a huge difference anyway.
+
 And I guess that's pretty much it. The database file name is Leio.realm, and the backups are created by zipping it and naming the zipped file leio_timestamp.lbf, I attached an example too. If you do the zipping in your script you could name the files rm_timestamp.lbf to differentiate them. Oh, and the current schema version is 5, you'd have to set that for migrations to work properly.
