@@ -1,17 +1,14 @@
 package knub.readmore_to_leio.databases;
 
 import android.content.Context;
-import android.support.annotation.RequiresPermission;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 public class LeioDatabase {
 
     private final Realm realm;
-    private Object numberOfSessions;
 
     public LeioDatabase(Context context) {
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.

@@ -8,7 +8,18 @@ import java.io.File;
 import java.util.Iterator;
 
 import knub.readmore_to_leio.BuildConfig;
-import static knub.readmore_to_leio.databases.ReadMoreColumnNames.*;
+
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.AUTHOR;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.BOOK_FOREIGN_KEY;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.FINISHED_AT;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.FIRST_PAGE;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.LAST_PAGE;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.ORDER;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.PRIMARY_KEY;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.SESSION_LENGTH;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.SESSION_START;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.STARTED_AT;
+import static knub.readmore_to_leio.databases.ReadMoreColumnNames.TITLE;
 
 public class ReadMoreDatabase {
 
@@ -24,16 +35,15 @@ public class ReadMoreDatabase {
     };
 
     String[] READING_SESSION_COLUMN_NAMES = {
-            PRIMARY_KEY,
-            FIRST_PAGE,
-            LAST_PAGE,
-            BOOK_FOREIGN_KEY,
-            SESSION_LENGTH,
-            SESSION_START
+        PRIMARY_KEY,
+        FIRST_PAGE,
+        LAST_PAGE,
+        BOOK_FOREIGN_KEY,
+        SESSION_LENGTH,
+        SESSION_START
     };
 
     SQLiteDatabase db;
-    private Object allReadingSessions;
 
     public ReadMoreDatabase(String databaseFileName) {
         File file = new File(databaseFileName);
@@ -52,7 +62,8 @@ public class ReadMoreDatabase {
 
     public Iterator<ReadMoreReadingSession> getAllReadingSessions() {
         @SuppressLint("Recycle")
-        Cursor result = db.query("ZREADINGSESSION", READING_SESSION_COLUMN_NAMES, null, null, null, null, null, null);
+        Cursor result = db.query("ZREADINGSESSION", READING_SESSION_COLUMN_NAMES,null, null, null,
+                null, null, null);
         return new ReadingSessionResultIterator(result);
     }
 }

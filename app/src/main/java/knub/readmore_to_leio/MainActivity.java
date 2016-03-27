@@ -12,7 +12,6 @@ import knub.readmore_to_leio.databases.ReadMoreDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
-    String TAG = "MainActivity";
     private String APPLICATION_FILE_PATH;
 
     @Override
