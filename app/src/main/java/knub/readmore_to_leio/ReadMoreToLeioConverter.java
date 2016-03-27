@@ -97,7 +97,10 @@ public class ReadMoreToLeioConverter {
         session.setFirstPage(readMoreSession.getFirstPage());
         session.setLastPage(readMoreSession.getLastPage());
         session.setDuration(readMoreSession.getSessionLength());
-        session.setDate(convertReadMoreTimeStampToDate(readMoreSession.getStartTimestamp()));
+        // ReadMore stores start timestam of session. Leio uses end timestamp of session.
+        // Thus, we just add the session length to the start timestamp
+        session.setDate(convertReadMoreTimeStampToDate(readMoreSession.getStartTimestamp() +
+                readMoreSession.getSessionLength()));
         return session;
     }
 
