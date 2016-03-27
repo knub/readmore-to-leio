@@ -12,8 +12,8 @@ import static knub.readmore_to_leio.databases.ReadMoreColumnNames.*;
 
 public class ReadMoreDatabase {
 
-    String TAG = this.getClass().getSimpleName();
-    String[] COLUMN_NAMES = {
+    String[] BOOK_COLUMN_NAMES = {
+        PRIMARY_KEY,
         TITLE,
         AUTHOR,
         FIRST_PAGE,
@@ -23,7 +23,18 @@ public class ReadMoreDatabase {
         ORDER
     };
 
+    String[] READING_SESSION_COLUMN_NAMES = {
+            PRIMARY_KEY,
+            FIRST_PAGE,
+            LAST_PAGE,
+            BOOK_FOREIGN_KEY,
+            SESSION_LENGTH,
+            SESSION_START
+    };
+
     SQLiteDatabase db;
+    private Object allReadingSessions;
+
     public ReadMoreDatabase(String databaseFileName) {
         File file = new File(databaseFileName);
         if (BuildConfig.DEBUG && !file.exists())
@@ -34,19 +45,24 @@ public class ReadMoreDatabase {
 
     public Iterator<ReadMoreBook> getAllBooks() {
         @SuppressLint("Recycle")
-        Cursor result = db.query("ZBOOK", COLUMN_NAMES, null, null, null, null, null, null);
-        return new ResultIterator(result);
+        Cursor result = db.query("ZBOOK", BOOK_COLUMN_NAMES, null, null, null, null, null, null);
+        return new BookResultIterator(result);
+    }
+
+
+    public Iterator<ReadMoreReadingSession> getAllReadingSessions() {
+        @SuppressLint("Recycle")
+        Cursor result = db.query("ZREADINGSESSION", READING_SESSION_COLUMN_NAMES, null, null, null, null, null, null);
+        return new ReadingSessionResultIterator(result);
     }
 }
 
-class ResultIterator implements Iterator<ReadMoreBook> {
+abstract class ReadMoreIterator<T> implements Iterator<T> {
 
-    String TAG = this.getClass().getSimpleName();
-
-    private final Cursor cursor;
+    protected final Cursor cursor;
     String[] columnNames;
 
-    public ResultIterator(Cursor cursor) {
+    public ReadMoreIterator(Cursor cursor) {
         this.cursor = cursor;
         cursor.moveToFirst();
 
@@ -55,29 +71,14 @@ class ResultIterator implements Iterator<ReadMoreBook> {
 
     @Override
     public boolean hasNext() {
-        if (cursor.isLast()) {
+        if (cursor.isAfterLast()) {
             cursor.close();
             return false;
         }
         return true;
     }
 
-    @Override
-    public ReadMoreBook next() {
-        cursor.moveToNext();
-        ReadMoreBook book = new ReadMoreBook();
-
-        book.setTitle(cursor.getString(indexOf(TITLE)));
-        book.setAuthor(cursor.getString(indexOf(AUTHOR)));
-        book.setFirstPage(cursor.getInt(indexOf(FIRST_PAGE)));
-        book.setLastPage(cursor.getInt(indexOf(LAST_PAGE)));
-        book.setStartTimestamp(cursor.getDouble(indexOf(STARTED_AT)));
-        book.setEndTimestamp(cursor.getDouble(indexOf(FINISHED_AT)));
-
-        return book;
-    }
-
-    private int indexOf(String columnName) {
+    protected int indexOf(String columnName) {
         return cursor.getColumnIndex(columnName);
     }
 
@@ -85,4 +86,51 @@ class ResultIterator implements Iterator<ReadMoreBook> {
     public void remove() {
         throw new UnsupportedOperationException();
     }
+}
+
+class BookResultIterator extends ReadMoreIterator<ReadMoreBook> {
+
+    public BookResultIterator(Cursor cursor) {
+        super(cursor);
+    }
+
+    @Override
+    public ReadMoreBook next() {
+        ReadMoreBook book = new ReadMoreBook();
+
+        book.setPrimaryKey(cursor.getInt(indexOf(PRIMARY_KEY)));
+        book.setTitle(cursor.getString(indexOf(TITLE)));
+        book.setAuthor(cursor.getString(indexOf(AUTHOR)));
+        book.setFirstPage(cursor.getInt(indexOf(FIRST_PAGE)));
+        book.setLastPage(cursor.getInt(indexOf(LAST_PAGE)));
+        book.setStartTimestamp(cursor.getDouble(indexOf(STARTED_AT)));
+        book.setEndTimestamp(cursor.getDouble(indexOf(FINISHED_AT)));
+
+        cursor.moveToNext();
+
+        return book;
+    }
+}
+
+class ReadingSessionResultIterator extends ReadMoreIterator<ReadMoreReadingSession> {
+
+    public ReadingSessionResultIterator(Cursor cursor) {
+        super(cursor);
+    }
+
+    @Override
+    public ReadMoreReadingSession next() {
+        ReadMoreReadingSession readingSession = new ReadMoreReadingSession();
+
+        readingSession.setFirstPage(cursor.getInt(indexOf(FIRST_PAGE)));
+        readingSession.setLastPage(cursor.getInt(indexOf(LAST_PAGE)));
+        readingSession.setBookForeignKey(cursor.getInt(indexOf(BOOK_FOREIGN_KEY)));
+        readingSession.setSessionLength(cursor.getDouble(indexOf(SESSION_LENGTH)));
+        readingSession.setStartTimestamp(cursor.getDouble(indexOf(SESSION_START)));
+
+        cursor.moveToNext();
+
+        return readingSession;
+    }
+
 }

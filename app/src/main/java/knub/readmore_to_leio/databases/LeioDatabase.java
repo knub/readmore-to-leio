@@ -1,14 +1,17 @@
 package knub.readmore_to_leio.databases;
 
 import android.content.Context;
+import android.support.annotation.RequiresPermission;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 public class LeioDatabase {
 
     private final Realm realm;
+    private Object numberOfSessions;
 
     public LeioDatabase(Context context) {
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
@@ -26,13 +29,28 @@ public class LeioDatabase {
     }
 
     public int getNumberOfBooks() {
-        RealmResults<Book> puppies = realm.where(Book.class).findAll();
-        return puppies.size();
+        RealmResults<Book> books = realm.where(Book.class).findAll();
+        return books.size();
     }
 
-    public void storeBook(Book book) {
+    public int getNumberOfSessions() {
+       RealmResults<ReadingSession> sessions = realm.where(ReadingSession.class).findAll();
+        return sessions.size();
+    }
+
+    public Book createBook() {
+        return realm.createObject(Book.class);
+    }
+
+    public ReadingSession createReadingSession() {
+        return realm.createObject(ReadingSession.class);
+    }
+
+    public void beginTransaction() {
         realm.beginTransaction();
-        realm.copyToRealm(book);
+    }
+
+    public void commitTransaction() {
         realm.commitTransaction();
     }
 }

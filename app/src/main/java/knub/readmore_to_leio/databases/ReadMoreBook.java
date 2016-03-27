@@ -1,6 +1,8 @@
 package knub.readmore_to_leio.databases;
 
 public class ReadMoreBook {
+
+    private int primaryKey;
     private String title;
     private String author;
 
@@ -11,6 +13,14 @@ public class ReadMoreBook {
     private double endTimestamp;
 
     private int order;
+
+    public int getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(int primaryKey) {
+        this.primaryKey = primaryKey;
+    }
 
     public String getTitle() {
         return title;

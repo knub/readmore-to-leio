@@ -31,8 +31,9 @@ public class MainActivity extends AppCompatActivity {
         ReadMoreToLeioConverter converter = new ReadMoreToLeioConverter(readmoreDb, leioDb);
         converter.convertDatabases();
 
-        Toast toast = Toast.makeText(getApplicationContext(), "Leio contains " + leioDb.getNumberOfBooks(), Toast.LENGTH_SHORT);
-        toast.show();
+        String toastText = String.format("%d books - %d sessions", leioDb.getNumberOfBooks(), leioDb.getNumberOfSessions());
+
+        Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 
     public void debugButtonClicked(View v) {
