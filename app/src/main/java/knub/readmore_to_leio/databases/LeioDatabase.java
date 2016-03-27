@@ -1,13 +1,10 @@
 package knub.readmore_to_leio.databases;
 
 import android.content.Context;
-import android.support.annotation.RequiresPermission;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import knub.readmore_to_leio.realm.Book;
-import knub.readmore_to_leio.realm.ReadingSession;
 
 public class LeioDatabase {
 
@@ -18,6 +15,10 @@ public class LeioDatabase {
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(context).build();
         // Get a Realm instance for this thread
         realm = Realm.getInstance(realmConfig);
+        clearDatabase();
+    }
+
+    private void clearDatabase() {
         realm.beginTransaction();
         realm.clear(Book.class);
         realm.clear(ReadingSession.class);
