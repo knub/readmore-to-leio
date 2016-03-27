@@ -13,6 +13,7 @@ public class LeioDatabase {
     public LeioDatabase(Context context) {
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(context)
+                .name("Leio.realm")
                 .schemaVersion(5)
                 .build();
         // Get a Realm instance for this thread
