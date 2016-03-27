@@ -1,6 +1,7 @@
 package knub.readmore_to_leio;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import knub.readmore_to_leio.databases.ReadMoreBook;
 import knub.readmore_to_leio.databases.ReadMoreDatabase;
 import knub.readmore_to_leio.databases.ReadMoreReadingSession;
 import knub.readmore_to_leio.databases.ReadingSession;
+import knub.readmore_to_leio.databases.User;
 
 /**
  * Given access to both databases, these class converts a ReadMore database into a Leio realm
@@ -33,6 +35,7 @@ public class ReadMoreToLeioConverter {
     public void convertDatabases() {
         Map<Integer, Book> books = convertBooks();
         convertSessions(books);
+        createOneUser(books);
     }
 
     private Map<Integer, Book> convertBooks() {
@@ -103,6 +106,18 @@ public class ReadMoreToLeioConverter {
                 readMoreSession.getSessionLength()));
         return session;
     }
+
+    private void createOneUser(Map<Integer, Book> books) {
+        int latestBookId = Collections.max(books.keySet());
+        leio.beginTransaction();
+        User user = leio.createUser();
+        user.setSelectedBook(books.get(latestBookId));
+        leio.commitTransaction();
+    }
+
+    /**
+     * Helper methods
+     */
 
     private Date convertReadMoreTimeStampToDate(double timestamp) {
         // There is a strange offset in the ReadMore databases, it counts the seconds from

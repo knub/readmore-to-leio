@@ -12,7 +12,9 @@ public class LeioDatabase {
 
     public LeioDatabase(Context context) {
         // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context).build();
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context)
+                .schemaVersion(5)
+                .build();
         // Get a Realm instance for this thread
         realm = Realm.getInstance(realmConfig);
         clearDatabase();
@@ -43,6 +45,10 @@ public class LeioDatabase {
         return realm.createObject(ReadingSession.class);
     }
 
+    public User createUser() {
+        return realm.createObject(User.class);
+    }
+
     public void beginTransaction() {
         realm.beginTransaction();
     }
@@ -50,4 +56,5 @@ public class LeioDatabase {
     public void commitTransaction() {
         realm.commitTransaction();
     }
+
 }
