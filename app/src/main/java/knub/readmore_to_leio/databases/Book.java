@@ -34,7 +34,7 @@ public class Book extends RealmObject {
 
     private int order = 0;
 
-    RealmList<ReadingSession> readingSessions = new RealmList<>();
+    private RealmList<ReadingSession> readingSessions;
 
     public String getTitle() {
         return title;

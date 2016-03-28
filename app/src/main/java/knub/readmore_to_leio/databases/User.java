@@ -1,13 +1,16 @@
 package knub.readmore_to_leio.databases;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Required;
 
 public class User extends RealmObject {
 
     Book selectedBook;
     boolean countAllArchived = true;
     boolean autoStart = true;
+    @Required
     String bookDetail = "timeToGo";
+    @Required
     String weeklyChart = "timeRead";
 
     public Book getSelectedBook() {
