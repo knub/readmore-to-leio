@@ -66,6 +66,10 @@ public class ReadMoreDatabase {
                 null, null, null);
         return new ReadingSessionResultIterator(result);
     }
+
+    public void close() {
+        db.close();
+    }
 }
 
 abstract class ReadMoreIterator<T> implements Iterator<T> {

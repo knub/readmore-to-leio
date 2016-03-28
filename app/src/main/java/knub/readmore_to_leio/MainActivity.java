@@ -25,14 +25,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void convertDatabase(View v) {
-        ReadMoreDatabase readmoreDb = new ReadMoreDatabase(APPLICATION_FILE_PATH + "/20160327T123540-ReadMore.sqlite3");
+        ReadMoreDatabase readMoreDb = new ReadMoreDatabase(APPLICATION_FILE_PATH + "/20160327T123540-ReadMore.sqlite3");
         LeioDatabase leioDb = new LeioDatabase(getApplicationContext());
-        ReadMoreToLeioConverter converter = new ReadMoreToLeioConverter(readmoreDb, leioDb);
+        ReadMoreToLeioConverter converter = new ReadMoreToLeioConverter(readMoreDb, leioDb);
         converter.convertDatabases();
 
         String toastText = String.format("%d books - %d sessions", leioDb.getNumberOfBooks(), leioDb.getNumberOfSessions());
-
         Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
+
+        readMoreDb.close();
+        leioDb.close();
     }
 
     public void debugButtonClicked(View v) {

@@ -58,4 +58,7 @@ public class LeioDatabase {
         realm.commitTransaction();
     }
 
+    public void close() {
+        realm.close();
+    }
 }
