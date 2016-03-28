@@ -37,10 +37,4 @@ public class MainActivity extends AppCompatActivity {
         leioDb.close();
     }
 
-    public void debugButtonClicked(View v) {
-        String[] permissions = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-        requestPermissions(permissions, 43);
-        Toast.makeText(getApplicationContext(), "Debug button clicked", Toast.LENGTH_SHORT).show();
-    }
-
 }
