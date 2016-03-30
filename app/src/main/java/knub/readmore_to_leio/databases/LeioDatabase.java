@@ -46,10 +46,6 @@ public class LeioDatabase {
         return realm.createObject(ReadingSession.class);
     }
 
-    public User createUser() {
-        return realm.createObject(User.class);
-    }
-
     public void beginTransaction() {
         realm.beginTransaction();
     }

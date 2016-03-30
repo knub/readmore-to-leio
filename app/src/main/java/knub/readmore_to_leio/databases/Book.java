@@ -34,8 +34,6 @@ public class Book extends RealmObject {
 
     private int order = 0;
 
-    private RealmList<ReadingSession> readingSessions;
-
     public String getTitle() {
         return title;
     }
@@ -164,11 +162,4 @@ public class Book extends RealmObject {
         this.order = order;
     }
 
-    public RealmList<ReadingSession> getReadingSessions() {
-        return readingSessions;
-    }
-
-    public void setReadingSessions(RealmList<ReadingSession> readingSessions) {
-        this.readingSessions = readingSessions;
-    }
 }

@@ -13,7 +13,6 @@ import knub.readmore_to_leio.databases.ReadMoreBook;
 import knub.readmore_to_leio.databases.ReadMoreDatabase;
 import knub.readmore_to_leio.databases.ReadMoreReadingSession;
 import knub.readmore_to_leio.databases.ReadingSession;
-import knub.readmore_to_leio.databases.User;
 
 /**
  * Given access to both databases, these class converts a ReadMore database into a Leio realm
@@ -35,7 +34,6 @@ public class ReadMoreToLeioConverter {
     public void convertDatabases() {
         Map<Integer, Book> books = convertBooks();
         convertSessions(books);
-        createOneUser(books);
     }
 
     private Map<Integer, Book> convertBooks() {
@@ -87,8 +85,7 @@ public class ReadMoreToLeioConverter {
             Book book = books.get(readMoreSession.getBookForeignKey());
             assert book != null;
             leioSession.setBook(book);
-            book.getReadingSessions().add(leioSession);
-            // set session key based on book
+            // set session key based on book now
             leioSession.setKey(buildSessionKey(leioSession));
             leio.commitTransaction();
         }
@@ -100,19 +97,11 @@ public class ReadMoreToLeioConverter {
         session.setFirstPage(readMoreSession.getFirstPage());
         session.setLastPage(readMoreSession.getLastPage());
         session.setDuration(readMoreSession.getSessionLength());
-        // ReadMore stores start timestam of session. Leio uses end timestamp of session.
+        // ReadMore stores start timestamp of session. Leio uses end timestamp of session.
         // Thus, we just add the session length to the start timestamp
         session.setDate(convertReadMoreTimeStampToDate(readMoreSession.getStartTimestamp() +
                 readMoreSession.getSessionLength()));
         return session;
-    }
-
-    private void createOneUser(Map<Integer, Book> books) {
-        int latestBookId = Collections.max(books.keySet());
-        leio.beginTransaction();
-        User user = leio.createUser();
-        user.setSelectedBook(books.get(latestBookId));
-        leio.commitTransaction();
     }
 
     /**
