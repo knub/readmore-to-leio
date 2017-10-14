@@ -1,5 +1,7 @@
 package knub.readmore_to_leio;
 
+import android.util.Log;
+
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
@@ -32,8 +34,12 @@ public class ReadMoreToLeioConverter {
      * Performs the conversion.
      */
     public void convertDatabases() {
+        Log.i("Converter", "Converting Books");
         Map<Integer, Book> books = convertBooks();
+        Log.i("Converter", "Converted Books");
+        Log.i("Converter", "Converting Sessions");
         convertSessions(books);
+        Log.i("Converter", "Converted Sessions");
     }
 
     private Map<Integer, Book> convertBooks() {
@@ -42,6 +48,7 @@ public class ReadMoreToLeioConverter {
         Iterator<ReadMoreBook> readMoreBooks = readMore.getAllBooks();
         while (readMoreBooks.hasNext()) {
             ReadMoreBook readMoreBook = readMoreBooks.next();
+            Log.i("Converter", readMoreBook.getTitle());
             leio.beginTransaction();
             Book leioBook = convertSingleBook(readMoreBook);
             leio.commitTransaction();
@@ -79,11 +86,15 @@ public class ReadMoreToLeioConverter {
         while (readMoreSessions.hasNext()) {
             ReadMoreReadingSession readMoreSession = readMoreSessions.next();
             leio.beginTransaction();
+            Log.i("Converter", "Converting session");
             ReadingSession leioSession = convertSingleSession(readMoreSession);
 
             // identify belonging book
             Book book = books.get(readMoreSession.getBookForeignKey());
-            assert book != null;
+            //assert book != null;
+            if (book == null) {
+                Log.w("Converter", "Book is null");
+            }
             leioSession.setBook(book);
             // set session key based on book now
             leioSession.setKey(buildSessionKey(leioSession));
