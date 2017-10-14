@@ -47,7 +47,10 @@ public class Book extends RealmObject {
     }
 
     public void setAuthor(String author) {
-        this.author = author;
+        if (author == null)
+            this.author = "<no author>";
+        else
+            this.author = author;
     }
 
     public int getFirstPage() {

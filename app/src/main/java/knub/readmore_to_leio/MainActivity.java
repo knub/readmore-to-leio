@@ -26,7 +26,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void convertDatabase(View v) {
-        ReadMoreDatabase readMoreDb = new ReadMoreDatabase(APPLICATION_FILE_PATH + "/20160327T123540-ReadMore.sqlite3");
+        // Run device, e.g. Nexus 6P API
+        // Start Android Device Monitor or, simpler, use the scripts under db_management
+        // Files are under /data/data/knub.readmore_to_leio/files
+        // Change next line after these comments
+        //  the realm database should be called `Leio.realm` and compressed into a zip file with the `.lbf` extension
+        String path = APPLICATION_FILE_PATH + "/20171010T201646-ReadMore.backup";
+        Log.i("Converter", path);
+        ReadMoreDatabase readMoreDb = new ReadMoreDatabase(path);
         LeioDatabase leioDb = new LeioDatabase(getApplicationContext());
         ReadMoreToLeioConverter converter = new ReadMoreToLeioConverter(readMoreDb, leioDb);
         converter.convertDatabases();
